@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Edit page</title>
+</head>
+<body>
+    <a href="{% url 'dashboard:logout' %}">log out</a>
+    <a href="{% url 'dashboard:dashboard' %}">Dashboard</a>
+
+	{% for appointment in appointments %}
+	<div>
+		<h1>Edit</h1>
+		<form action="{% url 'dashboard:update' id=appointment.id %}" method="post">
+			{% csrf_token %}
+			<label>Task: </label>
+			<input type="text" name="task" value={{appointment.task}}><br>
+
+			<label>Status</label>
+			<select name='status'>
+				<option value=2>Done</option>
+				<option value=1>Pending</option>
+				<option value=3>Missed</option>
+			</select>
+
+			<label>Date:</label>
+			<input type="date" name="date"><br>
+			<label>Time:</label>
+			<input type="time" name="time"><br>
+
+			<input type="submit" name="submit" value="Update">
+		</form>
+	</div>
+	{% endfor %}
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Dashboard Admin</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script>
+		function clicked(e){
+		  if(!confirm('Are you sure?'))e.preventDefault();
+		}
+	</script>
+</head>
+<body>
+<div class="row">
+  <div class="col-sm-1"></div>
+  <div class="col-sm-10">
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          
+        </div>
+        <ul class="nav navbar-nav">
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>
+<dir class="row">
+	<div class="col-sm-1"></div>
+	<div class="col-sm-2">
+		<h4>Manage Users</h4>
+    <a href="{% url 'dashboard:logout' %}">log out</a>
+    <a href="{% url 'dashboard:dashboard' %}">Dashboard</a>
+	</div>
+	<div class="col-sm-7"></div>
+	<div class="col-sm-1">
+	</div>
+</dir>
+{% for user in users %}
+<div class="container">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+      	<th>Task</th>
+        <th>Time</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    	{% for appointment in appointments %}
+    		<tr>
+          <th>{{ appointment.task }}</th>
+          <th>{{ appointment.time }} {{appointment.date}}</th>
+          <th>
+            {% if appointment.status == 1 %}
+              Pending
+            {% elif appointment.status == 2 %}
+              Done
+            {% else %}
+              Missed
+            {% endif %}
+          </th>
+    			<th>
+    				<a href="{% url 'dashboard:edit' id=appointment.id %}">Edit</a>
+    				<a href="{% url 'dashboard:delete' id=appointment.id %}" onclick='clicked(event)'>Remove</a>
+    			</th>
+    		</tr>
+    	{% endfor %}
+    </tbody>
+  </table>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th>Time</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for appointment in other_appointments %}
+        <tr>
+          <th>{{ appointment.task }}</th>
+          <th>{{ appointment.time }}{{appointment.date}}</th>
+          <th>
+            {% if appointment.status == 1 %}
+              Pending
+            {% elif appointment.status == 2 %}
+              Done
+            {% else %}
+              Missed
+            {% endif %}
+          </th>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>Add Appointment</h3>
+  <form action=" {% url 'dashboard:add_appointment' %}" method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="date">Date:</label>
+    <input type="date" class="form-control" id="date" name="date">
+  </div>
+  <div class="form-group">
+    <label for="time">Time</label>
+    <input type="time" class="form-control" id="time" name="time">
+  </div>
+  <div class="form-group">
+    <label><input type="text" name="task"> Task</label>
+  </div>
+  <button type="submit" class="btn btn-default">Add</button>
+  </form>
+</div>
+{% endfor %}
+
+
+</body>
+</html>
